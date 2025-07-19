@@ -1,3 +1,178 @@
+# HYMN EV Rentals – Electric Vehicle Rental Management System
+
+## 📘 Introduction
+
+### 🔹 Purpose
+This project aims to build an electric vehicle (EV) rental management system — **HYMN EV Rentals** — that facilitates customers to rent EVs easily while giving administrators tools to manage bookings, payments, and vehicles efficiently.
+
+### 🔹 Scope
+HYMN EV Rentals will provide:
+- A customer-facing portal for EV search, booking, and payment.
+- An admin dashboard for inventory and booking management.
+- Full-stack implementation including frontend, backend, database, and third-party integrations.
+
+### 🔹 Overview
+The system includes:
+- General description
+- Functional & non-functional requirements
+- Interface specifications
+- Performance metrics
+- Constraints
+- Budget and timeline estimates
+
+---
+
+## 🚦 General Description
+
+### 🔧 Product Functionality
+- Customer registration and login  
+- Search, filter, and book EVs  
+- Payment processing  
+- Rental history tracking  
+- Admin panel for managing vehicles and bookings  
+
+### 👥 User Characteristics
+- **Customers**: Familiar with basic mobile/web operations  
+- **Admins**: Trained in EV rental and fleet management
+
+### 🎯 Benefits
+- Promotes green transportation  
+- Simplifies rental operations  
+- Efficient fleet utilization and real-time updates  
+
+---
+
+## ✅ Functional Requirements
+
+### 🔐 R.1: User Registration and Login
+- **R.1.1 Register new user**:  
+  `Input:` Name, Email, Phone, Password  
+  `Output:` Success/Failure message
+
+- **R.1.2 Login**:  
+  `Input:` Email and Password  
+  `Output:` Dashboard access upon successful login
+
+### 🚗 R.2: Browse Available EVs
+- **R.2.1 Search & Filter**:  
+  `Input:` Location, Date, Vehicle Type  
+  `Output:` Filtered EV list  
+  `Processing:` Query database based on filters
+
+### 📅 R.3: Book EV
+- **R.3.1 Select vehicle**:  
+  `Input:` Vehicle ID  
+  `Output:` Rental form
+
+- **R.3.2 Enter rental period and confirm**:  
+  `Input:` Start Date, End Date  
+  `Output:` Payment page and confirmation
+
+### 💳 R.4: Payment Handling
+- **R.4.1 Make payment**:  
+  `Input:` Card/UPI details  
+  `Output:` Payment success/failure message  
+  `Processing:` Secure payment + invoice generation
+
+### 🛠️ R.5: Admin Panel Operations
+- **R.5.1 Add/Remove vehicles**:  
+  `Input:` Vehicle details  
+  `Output:` Updated inventory
+
+- **R.5.2 View all bookings**:  
+  `Input:` Filter by date/status  
+  `Output:` Booking list
+
+- **R.5.3 Update vehicle status**:  
+  Status options: Available, Booked, Maintenance
+
+---
+
+## 💻 Interface Requirements
+
+### 🌐 Frontend
+- HTML, CSS, JavaScript (React.js/Vue.js)
+- Customer & Admin dashboards
+
+### 🖧 Backend
+- Node.js + Express.js REST APIs
+- MongoDB or MySQL database
+
+### 🔌 External Interfaces
+- Razorpay/Stripe API for payments  
+- Email/SMS API for alerts  
+- Map API for geo-filtering  
+
+---
+
+## 🚀 Performance Requirements
+- Support **100+ concurrent users**
+- Booking response time: **< 2 seconds**
+- Payment processing time: **< 5 seconds**
+- Availability: **99.9% uptime per month**
+
+---
+
+## 📐 Design Constraints
+- Must be **browser compatible** (Chrome, Firefox, Safari)
+- Fully **responsive design** (mobile/tablet/desktop)
+- Use **HTTPS** for all communications
+- Payments must follow **PCI-DSS standards**
+
+---
+
+## 📊 Non-Functional Attributes
+
+| Attribute     | Details                                                                 |
+|---------------|-------------------------------------------------------------------------|
+| **Security**      | Encrypted passwords, secure authentication and transactions           |
+| **Portability**   | Usable on desktops, tablets, and smartphones                          |
+| **Reliability**   | Auto-backup every 24 hours; error logging                             |
+| **Scalability**   | Built to scale with increasing users                                  |
+| **Maintainability** | Modular architecture for easy codebase updates                      |
+| **Usability**     | Intuitive UI and low learning curve                                   |
+| **Data Integrity**| Prevent double-booking, maintain audit logs                           |
+
+---
+
+## 🗓️ Preliminary Schedule & 💰 Budget
+
+### 🧭 Timeline (~4 Months)
+1. **Requirement Analysis & Planning** – 2 weeks  
+2. **UI/UX and Frontend Development** – 4 weeks  
+3. **Backend and API Development** – 4 weeks  
+4. **Integration & Testing** – 3 weeks  
+5. **Deployment & Feedback** – 1 week  
+
+### 💸 Budget Estimate
+**₹2.5 – ₹3.5 lakhs** (if outsourced)
+
+---
+
+## 📎 Appendices
+
+### 🔤 Acronyms
+- **EV**: Electric Vehicle  
+- **UI**: User Interface  
+- **API**: Application Programming Interface
+
+### 📚 References
+- [GitHub Repo – EV Rental Management System](#)  
+- [Razorpay API Docs](https://razorpay.com/docs/api/)  
+- [MongoDB Documentation](https://www.mongodb.com/docs/)
+
+---
+
+## 📬 Contact
+For suggestions or queries, feel free to open an issue or submit a pull request.
+
+---
+
+> 🚗 Let's build a greener, smarter rental system with **HYMN EV Rentals**!
+
+
+
+
 # 📘 Software Requirements Specification (SRS)
 
 ## 🚗 Secure EV Rental Management System
