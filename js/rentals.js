@@ -10,7 +10,7 @@ const vehicles = [
             weekly: 464,  // 7% off
             monthly: 424  // 15% off
         },
-        image: 'images/ather-450x.jpg',
+        image: 'https://etimg.etb2bimg.com/photo/106592360.cms',
         description: 'Premium electric scooter with advanced features',
         range: '116 km',
         topSpeed: '80 kmph',
@@ -26,7 +26,7 @@ const vehicles = [
             weekly: 511,  // 7% off
             monthly: 467  // 15% off
         },
-        image: 'images/ola-s1.jpg',
+        image: 'https://cdn.bikedekho.com/processedimages/ola-electric/2025-s1-pro/source/2025-s1-pro679ce0d5bd70a.jpg?imwidth=412&impolicy=resize',
         description: 'Modern electric scooter with high performance',
         range: '181 km',
         topSpeed: '115 kmph',
@@ -42,7 +42,7 @@ const vehicles = [
             weekly: 446,  // 7% off
             monthly: 407  // 15% off
         },
-        image: 'images/tvs-iqube.jpg',
+        image: 'https://cdn.bikedekho.com/processedimages/tvs/iqube-electric/source/iqube-electric682583f18741e.jpg',
         description: 'Reliable electric scooter for daily commute',
         range: '100 km',
         topSpeed: '78 kmph',
@@ -59,7 +59,7 @@ const vehicles = [
             weekly: 650,  // 7% off
             monthly: 594  // 15% off
         },
-        image: 'images/revolt-rv400.jpg',
+        image: 'https://cdn.bikedekho.com/processedimages/revolt-motors/rv-400/source/rv-400654b5c6256286.jpg',
         description: 'Powerful electric motorcycle with great range',
         range: '150 km',
         topSpeed: '85 kmph',
@@ -75,7 +75,7 @@ const vehicles = [
             weekly: 743,  // 7% off
             monthly: 679  // 15% off
         },
-        image: 'images/tork-kratos.jpg',
+        image: 'https://staticimg.amarujala.com/assets/images/2022/01/26/tork-kratos-r-electric-motorcycle_1643183439.png?q=80&w=480&dpr=2.6',
         description: 'High-performance electric sports bike',
         range: '180 km',
         topSpeed: '105 kmph',
@@ -91,7 +91,7 @@ const vehicles = [
             weekly: 836,  // 7% off
             monthly: 764  // 15% off
         },
-        image: 'images/ultraviolette-f77.jpg',
+        image: 'https://www.team-bhp.com/sites/default/files/styles/check_extra_large_for_review/public/F77%20Space%20Edition%20-%20Lunar%20Hangar%20(7).jpg',
         description: 'Premium electric sports bike with cutting-edge technology',
         range: '200 km',
         topSpeed: '140 kmph',
@@ -108,7 +108,7 @@ const vehicles = [
             weekly: 1394,  // 7% off
             monthly: 1274  // 15% off
         },
-        image: 'images/nexon-ev.jpg',
+        image: 'https://catalog-management.s3.ap-south-1.amazonaws.com/htmobile1/tata_nexon-ev-facelift/images/exterior_tata-nexon-ev_front-left-side_600x400.jpg',
         description: 'Comfortable electric SUV for family trips',
         range: '312 km',
         topSpeed: '120 kmph',
@@ -124,7 +124,7 @@ const vehicles = [
             weekly: 1673,  // 7% off
             monthly: 1529  // 15% off
         },
-        image: 'images/mg-zs-ev.jpg',
+        image: 'https://gaadiwaadi.com/wp-content/uploads/2021/10/2022-MG-ZS-EV.jpg',
         description: 'Premium electric SUV with advanced features',
         range: '419 km',
         topSpeed: '140 kmph',
@@ -140,7 +140,7 @@ const vehicles = [
             weekly: 2324,  // 7% off
             monthly: 2124  // 15% off
         },
-        image: 'images/kia-ev6.jpg',
+        image: 'https://hips.hearstapps.com/hmg-prod/images/2025-kia-ev6-gt-107-6850566a67346.jpg?crop=0.755xw:0.567xh;0.0401xw,0.401xh&resize=1200:*',
         description: 'Luxury electric crossover with stunning performance',
         range: '528 km',
         topSpeed: '185 kmph',
