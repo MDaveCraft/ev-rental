@@ -16,6 +16,26 @@ The EV rental market in India is projected to hit **$21.37B by 2030 (14.4% CAGR)
 
 ---
 
+## Setup Instructions
+
+Before running the project, make sure to follow these initial setup steps:
+
+1. **Install dependencies**
+   Run the following command to install the required dependencies:
+
+   ```bash
+   bun install
+   ```
+
+2. **Start the development server**
+   After the dependencies are installed, start the development server:
+
+   ```bash
+   bun dev
+   ```
+
+---
+
 # 📘 Table of Contents
 
 1. [Introduction](#-introduction)
