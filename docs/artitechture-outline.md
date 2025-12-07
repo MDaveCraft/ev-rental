@@ -107,7 +107,7 @@ flowchart LR
 
 ---
 
-# **Architecture Explanation (Clear & Professional)**
+# **Architecture Explanation**
 
 ## **1. Client Layer**
 
