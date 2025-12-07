@@ -1,6 +1,6 @@
 # **HYMN EV Rentals — Microservices Architecture Diagram**
 
-## **Mermaid Diagram (copy–paste into any Mermaid renderer or Notion)**
+## **Mermaid Diagram**
 
 ```mermaid
 flowchart LR
