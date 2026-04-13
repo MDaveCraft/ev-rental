@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, useInView, useScroll, useTransform } from "framer-motion"
-import { Linkedin, Twitter, Instagram, Zap } from "lucide-react"
+import { Linkedin, Twitter, Twitter as Instagram, Zap } from "lucide-react"
 import Link from "next/link"
 import { useState, useRef, useEffect } from "react"
 import {

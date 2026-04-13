@@ -18,6 +18,7 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  Coins,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth, type UserRole } from "@/lib/auth-context"
@@ -35,6 +36,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Bookings", href: "/dashboard/bookings", icon: Calendar, roles: ["renter", "contractor", "admin"] },
   { label: "Fleet & Contractors", href: "/dashboard/fleet", icon: Car, roles: ["contractor", "admin"] },
   { label: "Charging & V2G", href: "/dashboard/charging", icon: Zap, roles: ["renter", "contractor", "admin"] },
+  { label: "V2G Credits", href: "/dashboard/v2g-credits", icon: Coins, roles: ["renter", "contractor", "admin"] },
   { label: "Education", href: "/dashboard/education", icon: GraduationCap, roles: ["renter", "contractor"] },
   { label: "Sustainability", href: "/dashboard/sustainability", icon: Leaf, roles: ["admin"] },
   { label: "Integrations", href: "/dashboard/integrations", icon: Plug, roles: ["admin"] },

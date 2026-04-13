@@ -1,3 +1,0 @@
-# Condensed Elevator Pitch (50–100 words)
-
-HYMN EV Rentals is building India’s first intelligent, predictive EV rental ecosystem, powered by an asset-light contractor fleet, smart charging integration, and a Proactive AI Co-Pilot that eliminates range anxiety. With nationwide charger reservations, predictive maintenance, and open-network Beckn interoperability, HYMN becomes the EV mobility backend for travel apps, delivery platforms, corporate fleets, and smart cities. Designed to scale without CapEx, HYMN targets India’s fast-growing $21B EV rental market with a platform that guarantees trip success—not just vehicle availability.
