@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, useInView, useScroll, useTransform } from "framer-motion"
-import { Linkedin, Twitter, Twitter as Instagram, Zap } from "lucide-react"
+import { Twitter, Instagram, Zap } from "lucide-react"
 import Link from "next/link"
 import { useState, useRef, useEffect } from "react"
 import {
@@ -224,7 +224,6 @@ export function Footer() {
             <ul className="space-y-3">
               {[
                 { icon: Twitter, label: "Twitter" },
-                { icon: Linkedin, label: "LinkedIn" },
                 { icon: Instagram, label: "Instagram" },
               ].map(({ icon: Icon, label }, i) => (
                 <motion.li
