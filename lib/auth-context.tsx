@@ -1,7 +1,16 @@
 "use client"
 
+/**
+ * Compatibility shim: existing components import `useAuth` from this module.
+ * Under the hood we now use Better Auth's session, so all dashboards/components
+ * keep working without modification.
+ */
+
 import type React from "react"
-import { createContext, useContext, useState, useCallback } from "react"
+import { useCallback, useMemo } from "react"
+import { useRouter } from "next/navigation"
+import { authClient, useSession } from "@/lib/auth-client"
+import { completeOnboardingAction } from "@/lib/actions/user"
 
 export type UserRole = "renter" | "contractor" | "admin"
 
@@ -14,98 +23,71 @@ export interface User {
   onboarded: boolean
 }
 
-interface AuthContextType {
-  user: User | null
-  isLoading: boolean
-  signIn: (email: string, password?: string) => Promise<void>
-  signUp: (name: string, email: string, role: UserRole) => Promise<void>
-  signOut: () => void
-  completeOnboarding: () => void
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
-
-// Mock users for demo
-const MOCK_USERS: Record<string, User> = {
-  "renter@hymn.ev": {
-    id: "1",
-    name: "Arjun Mehta",
-    email: "renter@hymn.ev",
-    role: "renter",
-    avatar: "/indian-professional-man.png",
-    onboarded: true,
-  },
-  "contractor@hymn.ev": {
-    id: "2",
-    name: "Priya Sharma",
-    email: "contractor@hymn.ev",
-    role: "contractor",
-    avatar: "/indian-woman-professional.png",
-    onboarded: true,
-  },
-  "admin@hymn.ev": {
-    id: "3",
-    name: "Vikram Singh",
-    email: "admin@hymn.ev",
-    role: "admin",
-    avatar: "/indian-man-executive.jpg",
-    onboarded: true,
-  },
-}
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-
-  const signIn = useCallback(async (email: string, _password?: string) => {
-    setIsLoading(true)
-    // Simulate API call
-    await new Promise((r) => setTimeout(r, 1000))
-    const mockUser = MOCK_USERS[email.toLowerCase()] || {
-      id: Date.now().toString(),
-      name: email.split("@")[0],
-      email,
-      role: "renter" as UserRole,
-      onboarded: false,
-    }
-    setUser(mockUser)
-    setIsLoading(false)
-  }, [])
-
-  const signUp = useCallback(async (name: string, email: string, role: UserRole) => {
-    setIsLoading(true)
-    await new Promise((r) => setTimeout(r, 1000))
-    setUser({
-      id: Date.now().toString(),
-      name,
-      email,
-      role,
-      onboarded: false,
-    })
-    setIsLoading(false)
-  }, [])
-
-  const signOut = useCallback(() => {
-    setUser(null)
-  }, [])
-
-  const completeOnboarding = useCallback(() => {
-    if (user) {
-      setUser({ ...user, onboarded: true })
-    }
-  }, [user])
-
-  return (
-    <AuthContext.Provider value={{ user, isLoading, signIn, signUp, signOut, completeOnboarding }}>
-      {children}
-    </AuthContext.Provider>
-  )
+  // Better Auth's useSession works without a provider, but we keep this
+  // component so existing layout code doesn't break.
+  return <>{children}</>
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider")
+  const router = useRouter()
+  const { data, isPending } = useSession()
+
+  const user = useMemo<User | null>(() => {
+    if (!data?.user) return null
+    const u = data.user as typeof data.user & {
+      role?: UserRole
+      onboarded?: boolean
+      image?: string | null
+    }
+    return {
+      id: u.id,
+      name: u.name,
+      email: u.email,
+      role: (u.role as UserRole) ?? "renter",
+      avatar: u.image ?? undefined,
+      onboarded: u.onboarded ?? false,
+    }
+  }, [data])
+
+  const signIn = useCallback(async (email: string, password?: string) => {
+    if (!password) throw new Error("Password is required")
+    const res = await authClient.signIn.email({ email, password })
+    if (res.error) throw new Error(res.error.message ?? "Sign in failed")
+    return res
+  }, [])
+
+  const signUp = useCallback(async (name: string, email: string, role: UserRole, password?: string) => {
+    if (!password) throw new Error("Password is required")
+    const res = await authClient.signUp.email({
+      email,
+      password,
+      name,
+      // additional fields
+      // @ts-expect-error - additionalFields are typed via inferAdditionalFields
+      role,
+    })
+    if (res.error) throw new Error(res.error.message ?? "Sign up failed")
+    return res
+  }, [])
+
+  const signOut = useCallback(async () => {
+    await authClient.signOut()
+    router.push("/sign-in")
+    router.refresh()
+  }, [router])
+
+  const completeOnboarding = useCallback(async () => {
+    await completeOnboardingAction({})
+    router.refresh()
+  }, [router])
+
+  return {
+    user,
+    isLoading: isPending,
+    signIn,
+    signUp,
+    signOut,
+    completeOnboarding,
   }
-  return context
 }

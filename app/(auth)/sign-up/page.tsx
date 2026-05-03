@@ -6,45 +6,92 @@ import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import { Mail, User, ArrowRight, ArrowLeft, Github, Chrome, Linkedin, Loader2, Zap, Car } from "lucide-react"
+import {
+  Mail,
+  User,
+  Lock,
+  ArrowRight,
+  ArrowLeft,
+  Github,
+  Chrome,
+  Loader2,
+  Zap,
+  Car,
+  AlertCircle,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { useAuth, type UserRole } from "@/lib/auth-context"
+import { authClient } from "@/lib/auth-client"
+
+type Role = "renter" | "contractor"
 
 export default function SignUpPage() {
   const router = useRouter()
-  const { signUp, isLoading } = useAuth()
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    role: "renter" as UserRole,
-    isContractor: false,
+    password: "",
+    role: "renter" as Role,
   })
-
-  const handleSocialSignUp = async (provider: string) => {
-    await signUp(`${provider} User`, `${provider}@example.com`, "renter")
-    router.push("/onboarding")
-  }
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const role = formData.isContractor ? "contractor" : formData.role
-    await signUp(formData.name, formData.email, role)
-    router.push("/onboarding")
+    setError(null)
+
+    if (formData.password.length < 8) {
+      setError("Password must be at least 8 characters")
+      return
+    }
+
+    setIsLoading(true)
+    try {
+      const res = await authClient.signUp.email({
+        email: formData.email,
+        password: formData.password,
+        name: formData.name,
+        // additional field
+        // @ts-expect-error custom field via inferAdditionalFields
+        role: formData.role,
+      })
+      if (res.error) {
+        setError(res.error.message ?? "Sign up failed")
+        return
+      }
+      router.push("/onboarding")
+      router.refresh()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Sign up failed")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const goNext = () => {
+    setError(null)
+    if (!formData.name || !formData.email || !formData.password) {
+      setError("Please fill in all fields")
+      return
+    }
+    if (formData.password.length < 8) {
+      setError("Password must be at least 8 characters")
+      return
+    }
+    setStep(2)
   }
 
   const roleOptions = [
     {
-      value: "renter",
+      value: "renter" as Role,
       label: "Renter",
       description: "Book EVs for personal or business trips",
       icon: Car,
     },
     {
-      value: "contractor",
+      value: "contractor" as Role,
       label: "Fleet Partner",
       description: "List your vehicles and earn revenue",
       icon: Zap,
@@ -60,7 +107,6 @@ export default function SignUpPage() {
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         className="relative hidden w-[60%] overflow-hidden bg-gradient-to-br from-background via-background to-accent/5 lg:block"
       >
-        {/* Atmospheric background */}
         <div className="absolute inset-0">
           <div
             className="absolute inset-0 opacity-[0.03]"
@@ -82,7 +128,6 @@ export default function SignUpPage() {
           />
         </div>
 
-        {/* Content */}
         <div className="relative z-10 flex h-full flex-col items-center justify-center p-12">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -90,13 +135,16 @@ export default function SignUpPage() {
             transition={{ delay: 0.3, duration: 0.8 }}
             className="text-center"
           >
-            {/* Fleet Illustration */}
             <div className="relative mb-8">
               <motion.div
                 animate={{ y: [0, -8, 0] }}
                 transition={{ duration: 5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
               >
-                <img src="/fleet-of-electric-vehicles-charging-station-night-.jpg" alt="EV Fleet" className="w-full max-w-lg opacity-80" />
+                <img
+                  src="/fleet-of-electric-vehicles-charging-station-night-.jpg"
+                  alt="EV Fleet"
+                  className="w-full max-w-lg opacity-80"
+                />
               </motion.div>
             </div>
 
@@ -112,7 +160,6 @@ export default function SignUpPage() {
             </p>
           </motion.div>
 
-          {/* Benefits */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -147,7 +194,6 @@ export default function SignUpPage() {
         className="flex w-full flex-col justify-center px-8 py-12 lg:w-[40%] lg:px-16"
       >
         <div className="mx-auto w-full max-w-sm">
-          {/* Logo */}
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
             <Link href="/" className="flex items-center gap-2">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
@@ -167,7 +213,6 @@ export default function SignUpPage() {
             <p className="text-muted-foreground">Start your sustainable mobility journey</p>
           </motion.div>
 
-          {/* Social Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -175,32 +220,29 @@ export default function SignUpPage() {
             className="space-y-3"
           >
             {[
-              { icon: Chrome, label: "Continue with Google", provider: "google" },
-              { icon: Github, label: "Continue with GitHub", provider: "github" },
-              { icon: Linkedin, label: "Continue with LinkedIn", provider: "linkedin" },
+              { icon: Chrome, label: "Continue with Google" },
+              { icon: Github, label: "Continue with GitHub" },
             ].map((social, i) => (
               <motion.div
-                key={social.provider}
+                key={social.label}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4 + i * 0.1 }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
               >
                 <Button
                   variant="outline"
                   className="w-full justify-start gap-3 h-12 bg-transparent"
-                  onClick={() => handleSocialSignUp(social.provider)}
-                  disabled={isLoading}
+                  disabled
+                  title="Social login coming soon"
                 >
                   <social.icon className="h-5 w-5" />
                   {social.label}
+                  <span className="ml-auto text-xs text-muted-foreground">Soon</span>
                 </Button>
               </motion.div>
             ))}
           </motion.div>
 
-          {/* Divider */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -212,7 +254,6 @@ export default function SignUpPage() {
             <div className="h-px flex-1 bg-border" />
           </motion.div>
 
-          {/* Email Form */}
           <motion.form
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -241,6 +282,7 @@ export default function SignUpPage() {
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         className="pl-10"
                         required
+                        autoComplete="name"
                       />
                     </div>
                   </div>
@@ -257,16 +299,40 @@ export default function SignUpPage() {
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         className="pl-10"
                         required
+                        autoComplete="email"
                       />
                     </div>
                   </div>
 
-                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    <Button type="button" className="w-full gap-2 h-12" onClick={() => setStep(2)}>
-                      Continue
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </motion.div>
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                        id="password"
+                        type="password"
+                        placeholder="At least 8 characters"
+                        value={formData.password}
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        className="pl-10"
+                        required
+                        minLength={8}
+                        autoComplete="new-password"
+                      />
+                    </div>
+                  </div>
+
+                  {error && step === 1 && (
+                    <div className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
+                      <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                      <span>{error}</span>
+                    </div>
+                  )}
+
+                  <Button type="button" className="w-full gap-2 h-12" onClick={goNext}>
+                    Continue
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
                 </motion.div>
               )}
 
@@ -281,12 +347,11 @@ export default function SignUpPage() {
                   <div className="space-y-3">
                     <Label>I want to...</Label>
                     {roleOptions.map((option) => (
-                      <motion.div
+                      <button
+                        type="button"
                         key={option.value}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => setFormData({ ...formData, role: option.value as UserRole })}
-                        className={`cursor-pointer rounded-lg border p-4 transition-all ${
+                        onClick={() => setFormData({ ...formData, role: option.value })}
+                        className={`w-full text-left cursor-pointer rounded-lg border p-4 transition-all ${
                           formData.role === option.value
                             ? "border-primary bg-primary/5"
                             : "border-border hover:border-primary/50"
@@ -307,20 +372,14 @@ export default function SignUpPage() {
                             <p className="text-sm text-muted-foreground">{option.description}</p>
                           </div>
                         </div>
-                      </motion.div>
+                      </button>
                     ))}
                   </div>
 
-                  {formData.role === "renter" && (
-                    <div className="flex items-center justify-between rounded-lg border p-4">
-                      <div>
-                        <p className="font-medium text-sm">I also want to list my vehicles</p>
-                        <p className="text-xs text-muted-foreground">Enable contractor features</p>
-                      </div>
-                      <Switch
-                        checked={formData.isContractor}
-                        onCheckedChange={(checked) => setFormData({ ...formData, isContractor: checked })}
-                      />
+                  {error && (
+                    <div className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
+                      <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                      <span>{error}</span>
                     </div>
                   )}
 
@@ -330,29 +389,27 @@ export default function SignUpPage() {
                       variant="outline"
                       className="flex-1 gap-2 bg-transparent"
                       onClick={() => setStep(1)}
+                      disabled={isLoading}
                     >
                       <ArrowLeft className="h-4 w-4" />
                       Back
                     </Button>
-                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex-1">
-                      <Button type="submit" className="w-full gap-2 h-12" disabled={isLoading}>
-                        {isLoading ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : (
-                          <>
-                            Create Account
-                            <ArrowRight className="h-4 w-4" />
-                          </>
-                        )}
-                      </Button>
-                    </motion.div>
+                    <Button type="submit" className="flex-1 gap-2 h-12" disabled={isLoading}>
+                      {isLoading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <>
+                          Create Account
+                          <ArrowRight className="h-4 w-4" />
+                        </>
+                      )}
+                    </Button>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </motion.form>
 
-          {/* Footer */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -363,23 +420,6 @@ export default function SignUpPage() {
             <Link href="/sign-in" className="text-primary hover:underline">
               Sign in
             </Link>
-          </motion.p>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-            className="mt-4 text-center text-xs text-muted-foreground/60"
-          >
-            By signing up, you agree to our{" "}
-            <Link href="#" className="underline hover:text-muted-foreground">
-              Terms of Service
-            </Link>{" "}
-            and{" "}
-            <Link href="#" className="underline hover:text-muted-foreground">
-              Privacy Policy
-            </Link>
-            .
           </motion.p>
         </div>
       </motion.div>
