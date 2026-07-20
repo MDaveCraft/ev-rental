@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, useInView, useScroll, useTransform } from "framer-motion"
-import { Twitter, Instagram, Zap } from "lucide-react"
+import { Heart, MessageCircle, Share2, Zap } from "lucide-react"
 import Link from "next/link"
 import { useState, useRef, useEffect } from "react"
 import {
@@ -223,8 +223,8 @@ export function Footer() {
             <h3 className="font-semibold text-white mb-5 text-sm uppercase tracking-wider">The Cool</h3>
             <ul className="space-y-3">
               {[
-                { icon: Twitter, label: "Twitter" },
-                { icon: Instagram, label: "Instagram" },
+                { icon: Heart, label: "Favorite" },
+                { icon: MessageCircle, label: "Chat" },
               ].map(({ icon: Icon, label }, i) => (
                 <motion.li
                   key={label}

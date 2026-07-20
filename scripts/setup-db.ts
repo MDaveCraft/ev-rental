@@ -4,7 +4,8 @@
  *
  * Idempotent: safe to re-run.
  */
-import postgres from "postgres"
+import "dotenv/config"
+import { createClient } from "@supabase/supabase-js"
 import { auth } from "../lib/auth"
 import { db } from "../lib/db"
 import { booking, user, vehicle } from "../lib/db/schema"
@@ -126,16 +127,24 @@ const REALTIME_SQL = [
 ]
 
 async function ensureSchema() {
-  const url = process.env.POSTGRES_URL_NON_POOLING || process.env.POSTGRES_URL
-  if (!url) throw new Error("POSTGRES_URL is not set")
+  const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required")
+  }
 
-  const sql = postgres(url, { prepare: false, max: 1 })
+  const supabase = createClient(supabaseUrl, supabaseServiceKey)
+  
   try {
     console.log("[v0] applying schema…")
-    await sql.unsafe(SCHEMA_SQL)
+    const { error } = await supabase.rpc('exec', { sql: SCHEMA_SQL })
+    if (error && !error.message.includes("duplicate")) {
+      throw error
+    }
+    
     for (const stmt of REALTIME_SQL) {
       try {
-        await sql.unsafe(stmt)
+        await supabase.rpc('exec', { sql: stmt })
       } catch (err: unknown) {
         // Already in publication is fine
         const msg = err instanceof Error ? err.message : String(err)
